@@ -2,6 +2,8 @@
 
 Extracts all the IOP events in a given date range and converts them into a single ICS file for import
 
+The daily output of this script can be found at <http://alexwendland.com/harvard/iop_events.ics>. Adding this URL to a calendar (such as Google Calendar) will keep you updated with all the latest IOP events.
+
 ## Requirements
 
 * Python 3
