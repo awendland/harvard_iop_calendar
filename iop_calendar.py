@@ -42,13 +42,13 @@ def combine_ics(icss):
 	ics_lines = []
 	for line in flatten([ics.split("\r\n") for ics in icss]):
 		if "END:VCALENDAR" not in line:
+			if "BEGIN:VEVENT" in line:
+				has_set_calendar_meta = True
+				past_vcal_meta = True
 			if not has_set_calendar_meta:
 				ics_lines.append(line)
 			if past_vcal_meta:
 				ics_lines.append(line)
-			if "BEGIN:VEVENT" in line:
-				has_set_calendar_meta = True
-				past_vcal_meta = True
 		else:
 			past_vcal_meta = False
 	ics_lines.append("END:VCALENDAR")
@@ -82,7 +82,7 @@ if __name__ == '__main__':
 
 		print("\n#==   Processing Events   ==#")
 		print("Combining ICS events")
-		events_ics = '\n'.join(combine_ics(event_icss))
+		events_ics = '\r\n'.join(combine_ics(event_icss))
 
 		if len(sys.argv) == 2:
 			file_name = sys.argv[1]
