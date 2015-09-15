@@ -5,6 +5,7 @@ import sys
 import itertools
 import re
 from time import strftime
+import multiprocessing
 
 
 def printnl(s):
@@ -54,6 +55,12 @@ def combine_ics(icss):
 	return ics_lines
 
 
+def __cli_download_event(event_url):
+	ics_data = get_ics(event_url)
+	print("%s ----> %d bytes" % (event_url, len(ics_data)))
+	return ics_data
+
+
 if __name__ == '__main__':
 	try:
 		cli_output = True
@@ -70,12 +77,8 @@ if __name__ == '__main__':
 		print("Extracted %d events" % len(event_urls))
 
 		print("\n#==  Downloading Events   ==#")
-		event_icss = []
-		for event_url in event_urls:
-			printnl('%s' % event_url)
-			ics_data = get_ics(event_url)
-			event_icss.append(ics_data)
-			print(" ----> %d bytes" % len(ics_data))
+		with multiprocessing.Pool(processes = 5) as pool:
+			event_icss = pool.map(__cli_download_event, event_urls)
 
 		print("\n#==   Processing Events   ==#")
 		print("Combining ICS events")
